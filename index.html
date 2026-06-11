@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World War Chess — APUSH Card Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0c;
+    --paper: #f5f2eb;
+    --card-bg: #fffef9;
+    --allied: #1a3a5c;
+    --allied-light: #d6e4f0;
+    --axis: #5c1a1a;
+    --axis-light: #f0d6d6;
+    --buff: #1a4a2e;
+    --buff-bg: #e8f5ee;
+    --debuff: #6b1a1a;
+    --debuff-bg: #faeaea;
+    --border: #d4cfc4;
+    --muted: #6b6760;
+    --stamp-ww2: #8b3a0f;
+    --stamp-cw: #0f4a8b;
+  }
+
+  body {
+    background: var(--paper);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    padding: 3rem 1.5rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.015) 40px,
+      rgba(255,255,255,0.015) 41px
+    );
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9FD4A0;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    color: #fff;
+    letter-spacing: 0.04em;
+    line-height: 0.95;
+    margin-bottom: 6px;
+  }
+  .hero h1 span { color: #E8C87A; }
+  .hero-sub {
+    font-size: 14px;
+    color: #888680;
+    line-height: 1.6;
+    max-width: 440px;
+    margin: 14px auto 0;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #2a2a28;
+  }
+  .stat-n { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #fff; letter-spacing: 0.04em; }
+  .stat-l { font-size: 11px; color: #666460; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+  /* ── NAV ── */
+  .nav {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-btn {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2.5px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-btn:hover { color: var(--ink); }
+  .nav-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .search-wrap { margin-left: auto; padding: 8px 0; }
+  .search-wrap input {
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink);
+    width: 180px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-wrap input:focus { border-color: #999; }
+
+  /* ── BODY ── */
+  .body { padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
+
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .pill {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pill:hover { border-color: #aaa; color: var(--ink); }
+  .pill.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .count-label { margin-left: auto; font-size: 12px; color: var(--muted); }
+
+  .phase-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 2rem 0 1.25rem;
+  }
+  .phase-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .phase-divider-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── FLASHCARD GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+
+  /* ── FLASHCARD ── */
+  .fc-wrap {
+    perspective: 1000px;
+    height: 300px;
+    cursor: pointer;
+  }
+  .fc {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+  }
+  .fc-wrap.flipped .fc { transform: rotateY(180deg); }
+
+  .fc-front, .fc-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+  }
+
+  /* FRONT */
+  .fc-front {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .fc-front-header {
+    padding: 12px 14px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .fc-num { font-size: 11px; color: var(--muted); font-weight: 500; flex-shrink: 0; padding-top: 2px; }
+  .fc-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    line-height: 1.3;
+  }
+  .phase-stamp {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .stamp-ww2 { background: #fdf0e6; color: #8b3a0f; border: 1px solid #e8c4a0; }
+  .stamp-cw  { background: #e6edf8; color: #0f4a8b; border: 1px solid #a0b8e8; }
+
+  .fc-question {
+    flex: 1;
+    padding: 14px;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+  }
+  .fc-effects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--border);
+  }
+  .fc-buff, .fc-debuff {
+    padding: 9px 12px 10px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .fc-buff { background: var(--buff-bg); border-right: 1px solid #c8e6d4; }
+  .fc-debuff { background: var(--debuff-bg); }
+  .eff-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .fc-buff .eff-label { color: var(--buff); }
+  .fc-debuff .eff-label { color: var(--debuff); }
+  .fc-buff p { color: #1a4a2e; }
+  .fc-debuff p { color: #6b1a1a; }
+
+  .fc-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 6px;
+    border-top: 1px solid var(--border);
+    background: #faf9f5;
+  }
+
+  /* BACK */
+  .fc-back {
+    transform: rotateY(180deg);
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+  }
+  .fc-back-header {
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2a2a28;
+  }
+  .fc-back-title { font-size: 13px; font-weight: 600; color: #E8C87A; }
+  .fc-back-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555350;
+  }
+  .fc-answer {
+    flex: 1;
+    padding: 14px;
+    font-size: 13px;
+    color: #d4d0c8;
+    line-height: 1.65;
+    overflow-y: auto;
+  }
+  .fc-back-hint {
+    text-align: center;
+    font-size: 11px;
+    color: #555350;
+    padding: 8px;
+    border-top: 1px solid #2a2a28;
+  }
+
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* ── HOW TO PLAY ── */
+  #tab-rules { display: none; }
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .rule-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .rule-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .rule-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  .rule-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  .pieces-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  @media(max-width: 480px) { .pieces-grid { grid-template-columns: 1fr; } }
+  .piece-table-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .piece-table-wrap h3 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .piece-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .piece-table td { padding: 4px 0; }
+  .piece-table td:first-child { color: var(--muted); width: 90px; }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  /* ── DICE ── */
+  #tab-dice { display: none; }
+  .dice-page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  .dice-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .dice-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+  }
+
+  /* 3D Die */
+  .die-scene {
+    width: 120px;
+    height: 120px;
+    perspective: 600px;
+    margin: 0 auto 2rem;
+    cursor: pointer;
+  }
+  .die {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg) rotateY(20deg);
+    transition: transform 0.08s;
+  }
+  .die.rolling {
+    animation: dieRoll 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  @keyframes dieRoll {
+    0%   { transform: rotateX(-20deg) rotateY(20deg); }
+    20%  { transform: rotateX(120deg) rotateY(200deg) rotateZ(60deg); }
+    50%  { transform: rotateX(300deg) rotateY(420deg) rotateZ(180deg); }
+    80%  { transform: rotateX(460deg) rotateY(600deg) rotateZ(280deg); }
+    100% { transform: var(--final-rot); }
+  }
+  .die-face {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 18px;
+    background: #fff;
+    border: 2px solid #1a1a1a;
+    display: grid;
+    grid-template-areas:
+      "a . b"
+      "c e d"
+      "f . g";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    padding: 14px;
+    gap: 0;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .die-face::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 60%);
+    pointer-events: none;
+  }
+  .dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    place-self: center;
+  }
+  /* face transforms */
+  .face-1 { transform: translateZ(60px); }
+  .face-6 { transform: rotateY(180deg) translateZ(60px); }
+  .face-2 { transform: rotateY(90deg)  translateZ(60px); }
+  .face-5 { transform: rotateY(-90deg) translateZ(60px); }
+  .face-3 { transform: rotateX(-90deg) translateZ(60px); }
+  .face-4 { transform: rotateX(90deg)  translateZ(60px); }
+
+  /* dot positions per face */
+  .f1 .dot { grid-area: e; }
+  .f2 .d1 { grid-area: a; } .f2 .d2 { grid-area: g; }
+  .f3 .d1 { grid-area: a; } .f3 .d2 { grid-area: e; } .f3 .d3 { grid-area: g; }
+  .f4 .d1 { grid-area: a; } .f4 .d2 { grid-area: b; } .f4 .d3 { grid-area: f; } .f4 .d4 { grid-area: g; }
+  .f5 .d1 { grid-area: a; } .f5 .d2 { grid-area: b; } .f5 .d3 { grid-area: e; } .f5 .d4 { grid-area: f; } .f5 .d5 { grid-area: g; }
+  .f6 .d1 { grid-area: a; } .f6 .d2 { grid-area: b; } .f6 .d3 { grid-area: c; } .f6 .d4 { grid-area: d; } .f6 .d5 { grid-area: f; } .f6 .d6 { grid-area: g; }
+
+  .roll-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: var(--ink);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-bottom: 2rem;
+  }
+  .roll-btn:hover { background: #2a2a28; }
+  .roll-btn:active { transform: scale(0.97); }
+  .roll-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .result-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--ink);
+    line-height: 1;
+    min-height: 80px;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+  }
+  .result-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    min-height: 20px;
+  }
+
+  /* Blitzkrieg tracker */
+  .blitz-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+  .blitz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .blitz-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .blitz-reset {
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .blitz-reset:hover { border-color: #999; color: var(--ink); }
+  .blitz-slots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .blitz-slot {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    border: 2px dashed var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .blitz-slot.filled {
+    border-style: solid;
+    border-color: #c0392b;
+    background: #fff0ee;
+  }
+  .blitz-slot .slot-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: #c0392b;
+    line-height: 1;
+  }
+  .blitz-slot .slot-file {
+    font-size: 10px;
+    color: #c0392b;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .blitz-slot.empty .slot-num { color: var(--border); font-size: 20px; }
+  .blitz-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    text-align: center;
+  }
+  .blitz-result {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #fff0ee;
+    border: 1px solid #f5c6c0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #c0392b;
+    font-weight: 500;
+    text-align: center;
+    display: none;
+  }
+  .blitz-result.show { display: block; }
+
+  /* Roll history */
+  .history-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: left;
+  }
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .history-header h3 { font-size: 14px; font-weight: 600; }
+  .history-clear {
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .history-clear:hover { border-color: #999; color: var(--ink); }
+  .history-list { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
+  .history-chip {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--ink);
+  }
+  .history-empty { font-size: 13px; color: var(--muted); padding: 6px 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="hero-eyebrow">APUSH Edition · 2-Player Strategy</p>
+  <h1>World War <span>Chess</span></h1>
+  <p class="hero-sub">Draw a card on your turn. Answer correctly to earn the buff — get it wrong and the debuff is yours. Click any card to reveal the answer.</p>
+  <div class="hero-stats">
+    <div><div class="stat-n">30</div><div class="stat-l">Total cards</div></div>
+    <div><div class="stat-n">15</div><div class="stat-l">WW2 Phase</div></div>
+    <div><div class="stat-n">15</div><div class="stat-l">Cold War Phase</div></div>
+    <div><div class="stat-n">35</div><div class="stat-l">Moves to Blitzkrieg</div></div>
+  </div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="setTab('cards', this)">Card deck</button>
+  <button class="nav-btn" onclick="setTab('dice', this)">🎲 Dice</button>
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Search cards…" oninput="render()">
+  </div>
+</nav>
+
+<main>
+  <!-- CARDS TAB -->
+  <div class="body" id="tab-cards">
+    <div class="filter-row">
+      <button class="pill active" id="pill-all" onclick="setFilter('all', this)">All 30</button>
+      <button class="pill" id="pill-ww2" onclick="setFilter('ww2', this)">WW2 only</button>
+      <button class="pill" id="pill-cw"  onclick="setFilter('cw',  this)">Cold War only</button>
+      <span class="count-label" id="count-label">30 cards</span>
+    </div>
+    <div id="deck"></div>
+  </div>
+
+  <!-- DICE TAB -->
+  <div id="tab-dice">
+    <div class="dice-page">
+      <p class="dice-title">Blitzkrieg Dice</p>
+      <p class="dice-sub">Roll to determine which files are destroyed.<br>Files: 1=a · 2=b · 3=c · 4=d · 5=e · 6=f</p>
+
+      <!-- 3D Die -->
+      <div class="die-scene" onclick="rollDie()">
+        <div class="die" id="die">
+          <div class="die-face face-1 f1"><div class="dot"></div></div>
+          <div class="die-face face-2 f2"><div class="dot d1"></div><div class="dot d2"></div></div>
+          <div class="die-face face-3 f3"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
+          <div class="die-face face-4 f4"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><div class="dot d4"></div></div>
+          <div class="die-face face-5 f5"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><div class="dot d4"></div><div class="dot d5"></div></div>
+          <div class="die-face face-6 f6"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><div class="dot d4"></div><div class="dot d5"></div><div class="dot d6"></div></div>
+        </div>
+      </div>
+
+      <div class="result-display" id="result-display">—</div>
+      <div class="result-label" id="result-label">Click the die or button to roll</div>
+
+      <button class="roll-btn" id="roll-btn" onclick="rollDie()">ROLL</button>
+
+      <!-- Blitzkrieg tracker -->
+      <div class="blitz-section">
+        <div class="blitz-header">
+          <h3>💥 Blitzkrieg Roll Tracker</h3>
+          <button class="blitz-reset" onclick="resetBlitz()">Reset</button>
+        </div>
+        <div class="blitz-slots" id="blitz-slots">
+          <div class="blitz-slot empty" id="slot-0"><span class="slot-num">?</span></div>
+          <div class="blitz-slot empty" id="slot-1"><span class="slot-num">?</span></div>
+          <div class="blitz-slot empty" id="slot-2"><span class="slot-num">?</span></div>
+          <div class="blitz-slot empty" id="slot-3"><span class="slot-num">?</span></div>
+        </div>
+        <p class="blitz-desc">Roll 4 times. Each number destroys that chess file. Click "Add to Blitzkrieg" after each roll.</p>
+        <button class="roll-btn" id="add-blitz-btn" onclick="addToBlitz()" style="font-size:16px;padding:10px 24px;margin:12px 0 0;display:none">+ Add to Blitzkrieg</button>
+        <div class="blitz-result" id="blitz-result"></div>
+      </div>
+
+      <!-- Roll history -->
+      <div class="history-section">
+        <div class="history-header">
+          <h3>Roll history</h3>
+          <button class="history-clear" onclick="clearHistory()">Clear</button>
+        </div>
+        <div class="history-list" id="history-list">
+          <span class="history-empty">No rolls yet.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>World War Chess · APUSH Edition · 30 cards · 2 players</footer>
+
+<script>
+const CARDS = [
+  {id:1,phase:'ww2',title:'Lend-Lease Act',
+   q:'What year did the U.S. pass the Lend-Lease Act?',
+   a:'1941. The Lend-Lease Act allowed the U.S. to supply Allied nations with war materials without requiring immediate payment, helping Britain and the USSR while the U.S. remained officially neutral.',
+   buff:'Move any one piece twice this turn.',
+   debuff:'One chosen piece cannot move next turn.'},
+  {id:2,phase:'ww2',title:'Pearl Harbor',
+   q:"What was Japan's strategic goal in attacking Pearl Harbor?",
+   a:"Japan aimed to cripple the U.S. Pacific Fleet to prevent American interference with Japanese expansion into Southeast Asia and the Pacific, buying time to establish a defensive perimeter.",
+   buff:"Immediately activate one of opponent's pawns as a knight for one turn.",
+   debuff:"Lose one pawn of opponent's choice."},
+  {id:3,phase:'ww2',title:'D-Day',
+   q:'What was the strategic purpose of the D-Day invasion?',
+   a:'Operation Overlord (June 6, 1944) opened a Western Front in Europe, relieving pressure on the USSR and beginning the liberation of Nazi-occupied Western Europe, eventually leading to Germany\'s defeat.',
+   buff:'Reposition one rook anywhere on your back rank.',
+   debuff:'Your rook cannot move for one turn.'},
+  {id:4,phase:'ww2',title:'Island Hopping',
+   q:'Which U.S. general led the Pacific island-hopping strategy?',
+   a:'General Douglas MacArthur (with Admiral Chester Nimitz) led the island-hopping strategy, bypassing heavily fortified Japanese islands to capture strategically important ones closer to Japan.',
+   buff:'Move a knight to any square within two L-shapes this turn.',
+   debuff:'Your knight loses its next move.'},
+  {id:5,phase:'ww2',title:'Manhattan Project',
+   q:'What was the Manhattan Project secretly developing?',
+   a:'The Manhattan Project was a secret U.S.-led research program that developed the first nuclear weapons. Led by J. Robert Oppenheimer, it produced the atomic bombs dropped on Hiroshima and Nagasaki in August 1945.',
+   buff:'Remove one enemy pawn anywhere on the board.',
+   debuff:'Lose one of your own pawns.'},
+  {id:6,phase:'ww2',title:'Battle of Stalingrad',
+   q:'Why is the Battle of Stalingrad considered a turning point in WWII?',
+   a:"The Battle of Stalingrad (1942–43) marked the first major German defeat on the Eastern Front. The encirclement and surrender of Germany's 6th Army ended Nazi offensive momentum and began the Soviet counter-offensive westward.",
+   buff:'Freeze one enemy piece for two turns.',
+   debuff:'One of your bishops is frozen for one turn.'},
+  {id:7,phase:'ww2',title:'War Production Board',
+   q:'What did the War Production Board regulate during WWII?',
+   a:'The War Production Board (WPB), established in 1942, directed the conversion of American industry to wartime production, allocating resources and overseeing the manufacture of military equipment, vehicles, and munitions.',
+   buff:'Move two pawns this turn.',
+   debuff:'You may not move any pawns next turn.'},
+  {id:8,phase:'ww2',title:'Double V Campaign',
+   q:"What were the two V's in the Double V Campaign?",
+   a:"The Double V Campaign, promoted by the Pittsburgh Courier in 1942, called for victory against fascism abroad AND victory against racism at home, highlighting the contradiction of Black Americans fighting for democracy while facing segregation.",
+   buff:'Promote one pawn forward one extra square for free.',
+   debuff:"Opponent advances one of their pawns."},
+  {id:9,phase:'ww2',title:'Executive Order 9066',
+   q:'What did Executive Order 9066 authorize?',
+   a:'Signed by FDR in 1942, Executive Order 9066 authorized the forced relocation and incarceration of approximately 120,000 Japanese Americans (two-thirds U.S. citizens) into internment camps during WWII.',
+   buff:'Force one enemy piece to move one square (not into check).',
+   debuff:'One of your pieces is forced back one square.'},
+  {id:10,phase:'ww2',title:'Tuskegee Airmen',
+   q:'What branch of the U.S. military were the Tuskegee Airmen part of?',
+   a:'The Tuskegee Airmen were part of the U.S. Army Air Forces, specifically the 332nd Fighter Group and 477th Bombardment Group. They were the first Black military aviators in the U.S. armed forces.',
+   buff:'Your knight may jump one extra square this turn.',
+   debuff:'Your knight loses its next move.'},
+  {id:11,phase:'ww2',title:'Office of Price Administration',
+   q:'What did the OPA control on the home front during WWII?',
+   a:'The Office of Price Administration controlled civilian prices, rationed scarce goods (gasoline, food, rubber, nylon), and issued ration books to prevent wartime inflation and ensure equitable distribution of limited resources.',
+   buff:'Opponent skips drawing a card next turn.',
+   debuff:'You skip your next card draw.'},
+  {id:12,phase:'ww2',title:'The Holocaust',
+   q:"What was the Nazi regime's 'Final Solution'?",
+   a:"The 'Final Solution' was the Nazi plan for the systematic genocide of European Jews. Implemented from 1941–1945, it resulted in the murder of approximately 6 million Jews and millions of others.",
+   buff:'Remove one enemy pawn adjacent to any of your pieces.',
+   debuff:'Lose one pawn.'},
+  {id:13,phase:'ww2',title:'Yalta Conference',
+   q:'Name one major agreement reached at the Yalta Conference.',
+   a:'At Yalta (February 1945), FDR, Churchill, and Stalin agreed on dividing Germany into occupation zones, free elections in liberated Eastern European nations (later violated by Stalin), Soviet entry into the Pacific war, and formation of the United Nations.',
+   buff:'Swap positions of any two of your minor pieces.',
+   debuff:'Opponent swaps two of your minor pieces.'},
+  {id:14,phase:'ww2',title:'Battle of Midway',
+   q:'Why is the Battle of Midway considered a turning point in the Pacific?',
+   a:'The Battle of Midway (June 1942) was a decisive U.S. naval victory in which American forces sank four Japanese aircraft carriers. It ended Japanese naval superiority in the Pacific and shifted the strategic initiative to the United States.',
+   buff:'Your bishop may move like a rook for one turn.',
+   debuff:'Your bishop cannot move next turn.'},
+  {id:15,phase:'ww2',title:"FDR's Four Freedoms",
+   q:"Name one of FDR's Four Freedoms from his 1941 speech.",
+   a:"FDR's Four Freedoms (January 1941) were: Freedom of Speech, Freedom of Worship, Freedom from Want, and Freedom from Fear. The speech articulated American democratic ideals and laid groundwork for later human rights frameworks.",
+   buff:'Gain immunity from debuffs for one full turn.',
+   debuff:'Opponent chooses your next move.'},
+  {id:16,phase:'cw',title:'Containment Doctrine',
+   q:'Who authored the U.S. containment doctrine?',
+   a:"George Kennan authored the containment doctrine, articulated in his 1946 Long Telegram and 1947 'X Article.' It proposed that the U.S. should firmly resist Soviet expansion at every point, becoming the foundation of U.S. Cold War foreign policy.",
+   buff:'Block one enemy piece from entering a chosen file for two turns.',
+   debuff:'One of your chosen files becomes blocked to you for one turn.'},
+  {id:17,phase:'cw',title:'Marshall Plan',
+   q:'What was the primary goal of the Marshall Plan?',
+   a:'The Marshall Plan (1948) provided over $13 billion in U.S. economic aid to rebuild war-devastated Western European economies, preventing the spread of communism by stabilizing democratic governments and creating markets for American goods.',
+   buff:'Restore one captured pawn to your back rank.',
+   debuff:'Opponent restores one of their captured pawns.'},
+  {id:18,phase:'cw',title:'Berlin Airlift',
+   q:'Why did the U.S. and allies airlift supplies to West Berlin?',
+   a:'In 1948–49, the Soviet Union blockaded all land routes to West Berlin, hoping to force the Allies out. The U.S. and Britain responded with a massive airlift, flying in supplies for 11 months until the Soviets lifted the blockade.',
+   buff:'Move any one piece over an enemy piece without capturing.',
+   debuff:'One piece cannot cross the center of the board for one turn.'},
+  {id:19,phase:'cw',title:'NATO',
+   q:'What year was NATO founded?',
+   a:'NATO (North Atlantic Treaty Organization) was founded in 1949. It established a collective defense alliance among Western nations, with Article 5 declaring that an attack on one member is an attack on all.',
+   buff:'One piece of your choice is protected from capture for two turns.',
+   debuff:'Opponent designates one of your pieces as unprotected.'},
+  {id:20,phase:'cw',title:'Warsaw Pact',
+   q:'Why did the Soviet Union create the Warsaw Pact?',
+   a:"The Warsaw Pact (1955) was the Soviet response to West Germany joining NATO. It created a mutual defense treaty among Eastern Bloc nations, formalized Soviet military dominance over Eastern Europe, and served as the communist counterpart to NATO.",
+   buff:'Freeze one enemy piece for one turn.',
+   debuff:'Opponent freezes one of your pieces for one turn.'},
+  {id:21,phase:'cw',title:'Korean War',
+   q:'What parallel line divided North and South Korea?',
+   a:'The 38th parallel divided North and South Korea, established after WWII. The Korean War (1950–53) ended with an armistice restoring the border near the 38th parallel, resulting in one of history\'s costliest stalemates.',
+   buff:'Push one pawn two squares even if it has already moved.',
+   debuff:'Your pawns can only move one square each for two turns.'},
+  {id:22,phase:'cw',title:'McCarthyism',
+   q:'What was Senator McCarthy primarily accusing Americans of?',
+   a:'Senator Joseph McCarthy accused hundreds of Americans — government officials, military figures, entertainers, and academics — of being communist agents or sympathizers, fueling a climate of fear and political repression (Red Scare) from 1950–1954.',
+   buff:"Peek at opponent's next drawn card.",
+   debuff:"Opponent peeks at your next drawn card."},
+  {id:23,phase:'cw',title:'Sputnik',
+   q:'Which country launched Sputnik in 1957?',
+   a:'The Soviet Union launched Sputnik 1 on October 4, 1957 — the world\'s first artificial satellite. This shocked Americans, triggered the Space Race, led to the creation of NASA (1958), and spurred massive U.S. investment in science and education.',
+   buff:'Move any one piece diagonally one extra square this turn.',
+   debuff:'Your bishop loses diagonal movement for one turn.'},
+  {id:24,phase:'cw',title:'Cuban Missile Crisis',
+   q:'What triggered the Cuban Missile Crisis?',
+   a:'In October 1962, U.S. reconnaissance photos revealed Soviet nuclear missile installations being built in Cuba. The 13-day standoff between Kennedy and Khrushchev brought the world closest to nuclear war, ending when the Soviets agreed to remove the missiles.',
+   buff:'Force opponent to skip their next turn.',
+   debuff:'You skip your next move.'},
+  {id:25,phase:'cw',title:'Vietnam War',
+   q:'What was the U.S. primary goal in the Vietnam War?',
+   a:'The U.S. primary goal was to prevent South Vietnam from falling to communist North Vietnam (containment policy). After 20 years and approximately 58,000 American deaths, U.S. forces withdrew in 1973 and South Vietnam fell in 1975.',
+   buff:'Remove one enemy pawn anywhere on the board.',
+   debuff:'Lose one of your own pawns.'},
+  {id:26,phase:'cw',title:'Domino Theory',
+   q:'What does the Domino Theory argue?',
+   a:'The Domino Theory, articulated by Eisenhower in 1954, argued that if one country fell to communism, neighboring countries would follow like a row of falling dominoes. It was used to justify U.S. intervention in Korea, Vietnam, and elsewhere.',
+   buff:'Move two of your pieces anywhere this turn.',
+   debuff:'Opponent moves two of their pieces next turn.'},
+  {id:27,phase:'cw',title:'Détente',
+   q:'What does the term détente mean in foreign policy?',
+   a:"Détente (French for 'relaxation') refers to the easing of Cold War tensions between the U.S. and USSR/China in the early 1970s under Nixon and Kissinger. It led to SALT I, Nixon's visit to China, and increased diplomatic and trade relations.",
+   buff:'Both players must skip attacking pieces for one turn.',
+   debuff:'Only you must skip attacking for one turn.'},
+  {id:28,phase:'cw',title:'SALT I',
+   q:'What did the SALT I treaty limit?',
+   a:'The Strategic Arms Limitation Talks I treaty (1972), signed by Nixon and Brezhnev, was the first major nuclear arms control agreement. It froze the number of ICBMs and submarine-launched ballistic missiles (SLBMs) each side could possess.',
+   buff:'Opponent cannot capture any piece next turn.',
+   debuff:'You cannot capture any piece next turn.'},
+  {id:29,phase:'cw',title:'Reagan Doctrine',
+   q:'What was the stated goal of the Reagan Doctrine?',
+   a:'The Reagan Doctrine (1985) committed the U.S. to providing military and financial support to anti-communist resistance movements worldwide (Afghanistan, Nicaragua, Angola), aiming to roll back Soviet influence rather than merely contain it.',
+   buff:'Promote one pawn to a knight for two turns.',
+   debuff:"Opponent promotes one of their pawns to a knight for two turns."},
+  {id:30,phase:'cw',title:'Fall of the Soviet Union',
+   q:'What year did the Soviet Union officially collapse?',
+   a:'The Soviet Union officially dissolved on December 25, 1991, when Mikhail Gorbachev resigned. This followed years of economic stagnation, Gorbachev\'s reforms (glasnost and perestroika), and independence declarations by Soviet republics.',
+   buff:'Restore any one captured minor piece to the board.',
+   debuff:'Opponent restores one of their captured minor pieces.'},
+];
+
+let activeFilter = 'all';
+const flipped = new Set();
+
+function setTab(tab, btn) {
+  document.getElementById('tab-cards').style.display = tab === 'cards' ? 'block' : 'none';
+  document.getElementById('tab-dice').style.display  = tab === 'dice'  ? 'block' : 'none';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function toggleCard(id) {
+  flipped.has(id) ? flipped.delete(id) : flipped.add(id);
+  const wrap = document.getElementById('fc-' + id);
+  if (wrap) wrap.classList.toggle('flipped', flipped.has(id));
+}
+
+function render() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const list = CARDS.filter(c => {
+    const matchPhase = activeFilter === 'all' || c.phase === activeFilter;
+    const matchQ = !q || (c.title + c.q + c.a).toLowerCase().includes(q);
+    return matchPhase && matchQ;
+  });
+
+  document.getElementById('count-label').textContent = list.length + ' card' + (list.length !== 1 ? 's' : '');
+
+  const deck = document.getElementById('deck');
+
+  if (!list.length) {
+    deck.innerHTML = '<div class="cards-grid"><div class="no-results">No cards match your search.</div></div>';
+    return;
+  }
+
+  let html = '';
+
+  if (activeFilter === 'all') {
+    const ww2 = list.filter(c => c.phase === 'ww2');
+    const cw  = list.filter(c => c.phase === 'cw');
+    if (ww2.length) {
+      html += phaseDivider('WW2 Phase — Cards 1–15');
+      html += '<div class="cards-grid">' + ww2.map(cardHTML).join('') + '</div>';
+    }
+    if (cw.length) {
+      html += phaseDivider('Cold War Phase — Cards 16–30');
+      html += '<div class="cards-grid">' + cw.map(cardHTML).join('') + '</div>';
+    }
+  } else {
+    html = '<div class="cards-grid">' + list.map(cardHTML).join('') + '</div>';
+  }
+
+  deck.innerHTML = html;
+}
+
+function phaseDivider(label) {
+  return `<div class="phase-divider"><div class="phase-divider-line"></div><span class="phase-divider-label">${label}</span><div class="phase-divider-line"></div></div>`;
+}
+
+function cardHTML(c) {
+  const isFlipped = flipped.has(c.id);
+  const stampClass = c.phase === 'ww2' ? 'stamp-ww2' : 'stamp-cw';
+  const stampText  = c.phase === 'ww2' ? 'WW2' : 'Cold War';
+  return `
+  <div class="fc-wrap${isFlipped ? ' flipped' : ''}" id="fc-${c.id}" onclick="toggleCard(${c.id})">
+    <div class="fc">
+      <div class="fc-front">
+        <div class="fc-front-header">
+          <span class="fc-num">#${c.id}</span>
+          <span class="fc-title">${c.title}</span>
+          <span class="phase-stamp ${stampClass}">${stampText}</span>
+        </div>
+        <div class="fc-question">${c.q}</div>
+        <div class="fc-effects">
+          <div class="fc-buff"><div class="eff-label">Buff</div><p>${c.buff}</p></div>
+          <div class="fc-debuff"><div class="eff-label">Debuff</div><p>${c.debuff}</p></div>
+        </div>
+        <div class="fc-hint">Click to reveal answer</div>
+      </div>
+      <div class="fc-back">
+        <div class="fc-back-header">
+          <span class="fc-back-title">${c.title}</span>
+          <span class="fc-back-tag">Answer</span>
+        </div>
+        <div class="fc-answer">${c.a}</div>
+        <div class="fc-back-hint">Click to flip back</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── DICE ──
+const FILES = ['a','b','c','d','e','f'];
+// Final rotations that show each face on top
+const FACE_ROTS = {
+  1: 'rotateX(-20deg) rotateY(20deg)',        // face 1 front
+  2: 'rotateX(-20deg) rotateY(-90deg)',        // face 2 right
+  3: 'rotateX(90deg) rotateY(20deg)',          // face 3 bottom
+  4: 'rotateX(-90deg) rotateY(20deg)',         // face 4 top
+  5: 'rotateX(-20deg) rotateY(90deg)',         // face 5 left
+  6: 'rotateX(-20deg) rotateY(-160deg)',       // face 6 back
+};
+let lastRoll = null;
+let rolling = false;
+let blitzRolls = [];
+let history = [];
+
+function rollDie() {
+  if (rolling) return;
+  rolling = true;
+  const btn = document.getElementById('roll-btn');
+  btn.disabled = true;
+  document.getElementById('add-blitz-btn').style.display = 'none';
+
+  const result = Math.floor(Math.random() * 6) + 1;
+  lastRoll = result;
+
+  const die = document.getElementById('die');
+  die.style.setProperty('--final-rot', FACE_ROTS[result]);
+  die.classList.add('rolling');
+
+  setTimeout(() => {
+    die.classList.remove('rolling');
+    die.style.transform = FACE_ROTS[result];
+    document.getElementById('result-display').textContent = result;
+    document.getElementById('result-label').textContent = `File ${FILES[result-1].toUpperCase()} · ${result === 6 ? 'f-file' : result === 1 ? 'a-file' : FILES[result-1]+'-file'}`;
+
+    // Add to history
+    history.unshift(result);
+    renderHistory();
+
+    // Show add button if blitz not full
+    if (blitzRolls.length < 4) {
+      document.getElementById('add-blitz-btn').style.display = 'inline-block';
+    }
+
+    rolling = false;
+    btn.disabled = false;
+  }, 750);
+}
+
+function addToBlitz() {
+  if (lastRoll === null || blitzRolls.length >= 4) return;
+  blitzRolls.push(lastRoll);
+  document.getElementById('add-blitz-btn').style.display = 'none';
+  renderBlitz();
+}
+
+function renderBlitz() {
+  for (let i = 0; i < 4; i++) {
+    const slot = document.getElementById('slot-' + i);
+    if (i < blitzRolls.length) {
+      const n = blitzRolls[i];
+      slot.className = 'blitz-slot filled';
+      slot.innerHTML = `<span class="slot-num">${n}</span><span class="slot-file">FILE ${FILES[n-1].toUpperCase()}</span>`;
+    } else {
+      slot.className = 'blitz-slot empty';
+      slot.innerHTML = `<span class="slot-num">?</span>`;
+    }
+  }
+
+  const resultEl = document.getElementById('blitz-result');
+  if (blitzRolls.length === 4) {
+    const files = blitzRolls.map(n => FILES[n-1].toUpperCase()).join(', ');
+    resultEl.textContent = `💥 BLITZKRIEG! Files ${files} are destroyed. Remove all pieces from these columns.`;
+    resultEl.classList.add('show');
+  } else {
+    resultEl.classList.remove('show');
+  }
+}
+
+function resetBlitz() {
+  blitzRolls = [];
+  lastRoll = null;
+  document.getElementById('add-blitz-btn').style.display = 'none';
+  document.getElementById('result-display').textContent = '—';
+  document.getElementById('result-label').textContent = 'Click the die or button to roll';
+  // Reset die to neutral
+  document.getElementById('die').style.transform = 'rotateX(-20deg) rotateY(20deg)';
+  renderBlitz();
+}
+
+function clearHistory() {
+  history = [];
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (!history.length) {
+    el.innerHTML = '<span class="history-empty">No rolls yet.</span>';
+    return;
+  }
+  el.innerHTML = history.slice(0, 40).map(n =>
+    `<div class="history-chip">${n}</div>`
+  ).join('');
+}
+
+// init blitz slots
+renderBlitz();
+</script>
+</body>
+</html>
